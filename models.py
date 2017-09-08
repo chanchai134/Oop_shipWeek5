@@ -18,13 +18,6 @@ class Ship:
         else:
             self.direction = Ship.DIR_HORIZONTAL
             self.angle = -90
-
-    def switch_direction(self):
-        if self.direction == Ship.DIR_HORIZONTAL:
-            self.direction = Ship.DIR_VERTICAL
-        else:
-            self.direction = Ship.DIR_HORIZONTAL
- 
  
     def update(self, delta):
         if self.direction == Ship.DIR_VERTICAL:
@@ -57,10 +50,8 @@ class ModelSprite(arcade.Sprite):
     def sync_with_model(self):
         if self.model:
             self.set_position(self.model.x, self.model.y)
-    def sync_with_model(self):
-        if self.model:
-            self.set_position(self.model.x, self.model.y)
             self.angle = self.model.angle
     def draw(self):
         self.sync_with_model()
         super().draw()
+
