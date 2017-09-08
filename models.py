@@ -1,24 +1,53 @@
 import arcade
+import arcade.key
 class Ship:
+    DIR_HORIZONTAL = 0
+    DIR_VERTICAL = 1
+ 
     def __init__(self, world, x, y):
         self.world = world
         self.x = x
         self.y = y
+        self.direction = Ship.DIR_VERTICAL
+        self.angle = 0
+ 
+    def switch_direction(self):
+        if self.direction == Ship.DIR_HORIZONTAL:
+            self.direction = Ship.DIR_VERTICAL
+            self.angle = 0
+        else:
+            self.direction = Ship.DIR_HORIZONTAL
+            self.angle = -90
+
+    def switch_direction(self):
+        if self.direction == Ship.DIR_HORIZONTAL:
+            self.direction = Ship.DIR_VERTICAL
+        else:
+            self.direction = Ship.DIR_HORIZONTAL
+ 
  
     def update(self, delta):
-        if self.y > self.world.height:
-            self.y = 0
-        self.y += 5
-
+        if self.direction == Ship.DIR_VERTICAL:
+            if self.y > self.world.height:
+                self.y = 0
+            self.y += 5
+        else:
+            if self.x > self.world.width:
+                self.x = 0
+            self.x += 5
 class World:
     def __init__(self, width, height):
         self.width = width
         self.height = height
         self.ship = Ship(self,100, 100)
-  
+    def on_key_press(self, key, key_modifiers):
+        self.world.on_key_press(key, key_modifiers)
     def update(self, delta):
         self.ship.update(delta)
-        
+    def on_key_press(self, key, key_modifiers):
+        if key == arcade.key.SPACE:
+            self.ship.switch_direction()
+
 class ModelSprite(arcade.Sprite):
     def __init__(self, *args, **kwargs):
         self.model = kwargs.pop('model', None)
@@ -28,7 +57,10 @@ class ModelSprite(arcade.Sprite):
     def sync_with_model(self):
         if self.model:
             self.set_position(self.model.x, self.model.y)
- 
+    def sync_with_model(self):
+        if self.model:
+            self.set_position(self.model.x, self.model.y)
+            self.angle = self.model.angle
     def draw(self):
         self.sync_with_model()
         super().draw()
