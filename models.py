@@ -47,15 +47,14 @@ class World:
         self.ship = Ship(self,100, 100)
         self.gold = Gold(self, 400, 400)
     def on_key_press(self, key, key_modifiers):
-        self.world.on_key_press(key, key_modifiers)
+        if key == arcade.key.SPACE:
+            self.ship.switch_direction()
     def update(self, delta):
         self.ship.update(delta)
  
         if self.ship.hit(self.gold, 15):
             self.gold.random_location()
-    def on_key_press(self, key, key_modifiers):
-        if key == arcade.key.SPACE:
-            self.ship.switch_direction()
+        
 
 class ModelSprite(arcade.Sprite):
     def __init__(self, *args, **kwargs):
@@ -70,15 +69,12 @@ class ModelSprite(arcade.Sprite):
     def draw(self):
         self.sync_with_model()
         super().draw()
-class Gold:
+class Gold(Model):
     def __init__(self, world, x, y):
+        super().__init__(world, x, y, 0)
         self.world = world
         self.x = x
         self.y = y
     def random_location(self):
         self.x = randint(0, self.world.width - 1)
         self.y = randint(0, self.world.height - 1)
-
-class Gold(Model):
-    def __init__(self, world, x, y):
-        super().__init__(world, x, y, 0)
